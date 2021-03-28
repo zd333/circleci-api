@@ -5,7 +5,7 @@ import {
   GitRequiredRequest,
   BuildAction,
   createVcsUrl,
-  CircleOptions
+  CircleOptions,
 } from "../types";
 import { client } from "../client";
 
@@ -30,10 +30,11 @@ export function postBuildActions(
   token: string,
   buildNumber: number,
   action: BuildAction,
-  { circleHost, ...vcs }: GitInfo & CircleOptions
+  { circleHost, ...vcs }: GitInfo & CircleOptions,
+  customHeaders?: any
 ): Promise<BuildActionResponse> {
   const url = `${createVcsUrl(vcs)}/${buildNumber}/${action}`;
-  return client(token, circleHost).post(url);
+  return client(token, circleHost, customHeaders).post(url);
 }
 
 /**
@@ -50,11 +51,12 @@ export function postTriggerNewBuild(
   {
     circleHost,
     vcs,
-    options: { branch = "", newBuildOptions = {} } = {}
-  }: GitRequiredRequest
+    options: { branch = "", newBuildOptions = {} } = {},
+  }: GitRequiredRequest,
+  customHeaders?: any
 ): Promise<TriggerBuildResponse> {
   const url = `${createVcsUrl(vcs)}${branch ? `/tree/${branch}` : ""}`;
-  return client(token, circleHost).post<TriggerBuildResponse>(
+  return client(token, circleHost, customHeaders).post<TriggerBuildResponse>(
     url,
     newBuildOptions
   );

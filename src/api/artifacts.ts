@@ -3,7 +3,7 @@ import {
   ArtifactResponse,
   GitRequiredRequest,
   createVcsUrl,
-  CircleOptions
+  CircleOptions,
 } from "../types";
 import { client } from "../client";
 import { queryParams } from "../util";
@@ -23,10 +23,11 @@ import { queryParams } from "../util";
 export function getBuildArtifacts(
   token: string,
   buildNumber: number,
-  { circleHost, ...vcs }: GitInfo & CircleOptions
+  { circleHost, ...vcs }: GitInfo & CircleOptions,
+  customHeaders?: any
 ): Promise<ArtifactResponse> {
   const url = `${createVcsUrl(vcs)}/${buildNumber}/artifacts`;
-  return client(token, circleHost).get<ArtifactResponse>(url);
+  return client(token, circleHost, customHeaders).get<ArtifactResponse>(url);
 }
 
 /**
@@ -44,12 +45,13 @@ export function getBuildArtifacts(
  */
 export function getLatestArtifacts(
   token: string,
-  { vcs, options = {}, circleHost }: GitRequiredRequest
+  { vcs, options = {}, circleHost }: GitRequiredRequest,
+  customHeaders?: any
 ): Promise<ArtifactResponse> {
   const { branch, filter } = options;
   const url = `${createVcsUrl(vcs)}/latest/artifacts${queryParams({
     branch,
-    filter
+    filter,
   })}`;
-  return client(token, circleHost).get<ArtifactResponse>(url);
+  return client(token, circleHost, customHeaders).get<ArtifactResponse>(url);
 }

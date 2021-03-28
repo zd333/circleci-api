@@ -4,7 +4,7 @@ import {
   createVcsUrl,
   CheckoutKey,
   DeleteCheckoutKeyResponse,
-  CircleOptions
+  CircleOptions,
 } from "../types";
 import { client } from "../client";
 import { createJsonHeader } from "../util";
@@ -22,9 +22,12 @@ import { createJsonHeader } from "../util";
  */
 export function getCheckoutKeys(
   token: string,
-  { circleHost, ...vcs }: GitInfo & CircleOptions
+  { circleHost, ...vcs }: GitInfo & CircleOptions,
+  customHeaders?: any
 ): Promise<CheckoutKeyResponse> {
-  return client(token, circleHost).get<CheckoutKeyResponse>(createUrl(vcs));
+  return client(token, circleHost, customHeaders).get<CheckoutKeyResponse>(
+    createUrl(vcs)
+  );
 }
 
 /**
@@ -42,9 +45,10 @@ export function getCheckoutKeys(
 export function createCheckoutKey(
   token: string,
   key: CheckoutKey,
-  { circleHost, ...vcs }: GitInfo & CircleOptions
+  { circleHost, ...vcs }: GitInfo & CircleOptions,
+  customHeaders?: any
 ): Promise<CheckoutKeyResponse> {
-  return client(token, circleHost).post<CheckoutKeyResponse>(
+  return client(token, circleHost, customHeaders).post<CheckoutKeyResponse>(
     createUrl(vcs),
     key,
     createJsonHeader()
@@ -66,9 +70,10 @@ export function createCheckoutKey(
 export function getCheckoutKey(
   token: string,
   fingerprint: string,
-  { circleHost, ...vcs }: GitInfo & CircleOptions
+  { circleHost, ...vcs }: GitInfo & CircleOptions,
+  customHeaders?: any
 ): Promise<CheckoutKeyResponse> {
-  return client(token, circleHost).get<CheckoutKeyResponse>(
+  return client(token, circleHost, customHeaders).get<CheckoutKeyResponse>(
     createUrl(vcs, fingerprint)
   );
 }
@@ -88,11 +93,12 @@ export function getCheckoutKey(
 export function deleteCheckoutKey(
   token: string,
   fingerprint: string,
-  { circleHost, ...vcs }: GitInfo & CircleOptions
+  { circleHost, ...vcs }: GitInfo & CircleOptions,
+  customHeaders?: any
 ): Promise<DeleteCheckoutKeyResponse> {
-  return client(token, circleHost).delete<DeleteCheckoutKeyResponse>(
-    createUrl(vcs, fingerprint)
-  );
+  return client(token, circleHost, customHeaders).delete<
+    DeleteCheckoutKeyResponse
+  >(createUrl(vcs, fingerprint));
 }
 
 /**
